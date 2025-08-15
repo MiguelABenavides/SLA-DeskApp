@@ -1,49 +1,63 @@
+# gui.py
+
 import tkinter as tk
+from tkinter import messagebox as VaquerosMessager
+
+def on_login_attempt():
+
+    # Get the text entered into the username and password fields
+    username = username_entry.get()
+    password = password_entry.get()
+
+    # For now, we'll just show what was entered.
+    message = f"Attempting login...\nUsername: {username}\nPassword: {password}"
+    VaquerosMessager.showinfo("Login Attempt", message)
+    print(f"Login attempt - Username: {username}, Password: {password}")
 
 def create_main_window():
 
-    # the main window instance
+    # Create the main window instance.
     window = tk.Tk()
 
-    # the title of the window
+    # Set the title of the window.
     window.title("The Vaquero Network")
 
-    # the initial size of the window (w x h)
+    # Set the initial size of the window (width x height).
     window.geometry("400x300")
 
-    # create a label widget to display a welcome message
+    # Create a label widget to display a welcome message.
     welcome_label = tk.Label(
         window,
-        text="Welcome to the School Social Life App!",
+        text="Welcome to The Vaquero Network!",
         font=("Arial", 16)
     )
+    welcome_label.pack(pady=20)
 
-    # the label into the window with padding
-    welcome_label.pack(pady=50)
+    # --- Username Input ---
+    username_label = tk.Label(window, text="Username:")
+    username_label.pack(pady=(10, 0))
 
-    welcome_label.pack(pady=20) # use extra pad to add some vertical space
+    # Create a global variable for the username entry field
+    global username_entry
+    username_entry = tk.Entry(window, width=30)
+    username_entry.pack(pady=(0, 10))
 
-    # username button
-    userName_button = tk.Button(
-        window,
-        text="Username",
-    )
-    userName_button.pack(pady=10) # Add some space around the button
+    # --- Password Input ---
+    password_label = tk.Label(window, text="Password:")
+    password_label.pack(pady=(10, 0))
 
-    # password button
-    password_button = tk.Button(
-        window,
-        text="Username",
-    )
-    password_button.pack(pady=10) # Add some space around the button
+    # Create a global variable for the password entry field
+    global password_entry
+    password_entry = tk.Entry(window, width=30, show="*")
+    password_entry.pack(pady=(0, 20))
 
-    # login button widget
+    # --- Login Button ---
     login_button = tk.Button(
         window,
         text="Login",
+        command=on_login_attempt
     )
-    login_button.pack(pady=10) # add space around the button
+    login_button.pack(pady=10)
 
-    # return window object to be used in the main file
+    # Return the window object to be used in the main file.
     return window
-
