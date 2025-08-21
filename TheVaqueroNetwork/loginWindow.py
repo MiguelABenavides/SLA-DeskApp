@@ -3,6 +3,8 @@ from tkinter import messagebox as VaquerosMessager
 
 # Imports the database functions from your database.py file
 from database import validate_user, add_user
+# Import the richer dashboard window implementation
+from dashboardWindow import create_dashboard_window as open_dashboard_window
 
 # Global variables for entry widgets. These need to be accessible across functions
 # like on_login_attempt, so they are declared global here and assigned in create_main_window.
@@ -27,15 +29,6 @@ def create_dashboard_window():
         fg="#0056b3" # Sets a blue foreground color
     )
     dashboard_label.pack(pady=50) # Packs the label with vertical padding
-
-    # Placeholder labels for main features. These will later be replaced with actual UI.
-    tk.Label(dashboard_window, text="🚀 Activities/Task Schedule", font=("Arial", 14)).pack(pady=10)
-    tk.Label(dashboard_window, text="🗓️ Event Calendar", font=("Arial", 14)).pack(pady=10)
-    tk.Label(dashboard_window, text="📣 Bulletin Board", font=("Arial", 14)).pack(pady=10)
-    tk.Label(dashboard_window, text="📞 Emergency Contacts", font=("Arial", 14)).pack(pady=10)
-
-    # Note: dashboard_window.mainloop() is NOT called here.
-    # The single mainloop() in main.py manages all Tkinter windows.
 
 def on_login_attempt(login_window):
     """
@@ -63,7 +56,7 @@ def on_login_attempt(login_window):
         VaquerosMessager.showinfo("Login Successful", "Welcome to The Vaquero Network!")
         print(f"Login successful for user: {username}")
         login_window.destroy() # Closes the current login window upon successful login
-        create_dashboard_window() # Opens the main dashboard window
+        open_dashboard_window() # Opens the main dashboard window (rich dashboard)
     else:
         # If the user is not found in the database, offers to create a new account
         if VaquerosMessager.askyesno("User Not Found", "User not found. Would you like to create an account?"):

@@ -1,5 +1,12 @@
 import tkinter as tk
 
+# Default text to show when the dashboard opens
+WELCOME_TEXT = (
+    "Welcome to The Vaquero Network!\n\n"
+    "This is your dashboard home.\n\n"
+    "Use the navigation on the left to explore Activities, Calendar, Bulletin Board, and Emergency Contacts."
+)
+
 current_dashboard_content = None
 
 def clear_dashboard_content(parent_frame):
@@ -8,6 +15,16 @@ def clear_dashboard_content(parent_frame):
     """
     for widget in parent_frame.winfo_children():
         widget.destroy()
+
+def show_welcome_text(parent_frame, text: str | None = None):
+    """
+    Displays a welcome/custom text area in the dashboard content area.
+    """
+    clear_dashboard_content(parent_frame)
+    message = text if text is not None else WELCOME_TEXT
+    tk.Label(parent_frame, text="Dashboard", font=("Arial", 16, "bold"), fg="#333333").pack(pady=(20, 10))
+    tk.Message(parent_frame, text=message, font=("Arial", 12), width=700, justify="left").pack(padx=20, pady=(0, 20))
+
 
 def show_activities_manager(parent_frame):
     """
@@ -20,9 +37,9 @@ def show_activities_manager(parent_frame):
     tk.Label(parent_frame, text="Here you can add, view, edit, and delete your tasks.", font=("Arial", 12)).pack(pady=10)
 
     # Placeholder buttons for CRUD operations (we'll implement these next)
-    add_task_button = tk.Button(parent_frame, text="Add New Task", font=("Arial", 10, "bold"), bg="#5cb85c", fg="white", width=15)
+    add_task_button = tk.Button(parent_frame, text="Add New Task", font=("Arial", 12, "bold"), bg="#5cb85c", fg="white", width=15)
     add_task_button.pack(pady=5)
-    view_tasks_button = tk.Button(parent_frame, text="View All Tasks", font=("Arial", 10, "bold"), bg="#0275d8", fg="white", width=15)
+    view_tasks_button = tk.Button(parent_frame, text="View All Tasks", font=("Arial", 12, "bold"), bg="#0275d8", fg="white", width=15)
     view_tasks_button.pack(pady=5)
 
 def show_event_calendar(parent_frame):
@@ -60,10 +77,10 @@ def create_dashboard_window():
 
     # Configure grid for main layout (sidebar and content area)
     dashboard_window.grid_rowconfigure(0, weight=1)
-    dashboard_window.grid_columnconfigure(0, weight=0) # Sidebar column - fixed width
-    dashboard_window.grid_columnconfigure(1, weight=1) # Main content column - expands
+    dashboard_window.grid_columnconfigure(0, weight=0)
+    dashboard_window.grid_columnconfigure(1, weight=1)
 
-    # --- Sidebar Frame ---
+    #Sidebar Frame
     sidebar_frame = tk.Frame(dashboard_window, bg="#e0e0e0", width=200, relief="raised", bd=2)
     sidebar_frame.grid(row=0, column=0, sticky="nswe")
     sidebar_frame.pack_propagate(False) # Prevent frame from shrinking to content
@@ -77,18 +94,20 @@ def create_dashboard_window():
 
     # Dashboard navigation buttons
     # Note: We pass dashboard_content_frame to these functions
+    home_button = tk.Button(sidebar_frame, text="Home", command=lambda: show_welcome_text(dashboard_content_frame), width=20, pady=5)
+    home_button.pack(pady=5)
+
     activities_button = tk.Button(sidebar_frame, text="Activities", command=lambda: show_activities_manager(dashboard_content_frame), width=20, pady=5)
     activities_button.pack(pady=5)
+
     calendar_button = tk.Button(sidebar_frame, text="Calendar", command=lambda: show_event_calendar(dashboard_content_frame), width=20, pady=5)
     calendar_button.pack(pady=5)
+
     bulletin_button = tk.Button(sidebar_frame, text="Bulletin Board", command=lambda: show_bulletin_board(dashboard_content_frame), width=20, pady=5)
     bulletin_button.pack(pady=5)
+
     emergency_button = tk.Button(sidebar_frame, text="Emergency Contacts", command=lambda: show_emergency_contacts(dashboard_content_frame), width=20, pady=5)
     emergency_button.pack(pady=5)
 
-    # Display Activities Manager by default when dashboard opens
-    show_activities_manager(dashboard_content_frame)
-
-    # Note: We don't call dashboard_window.mainloop() here.
-    # The mainloop() of the login window (controlled by main.py)
-    # manages all Tkinter windows.
+    # Display welcome text when dashboard opens
+    show_welcome_text(dashboard_content_frame)
