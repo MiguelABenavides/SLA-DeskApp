@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox as VaquerosMessager
 
+from createAccount import create_account_window # Imports the account creation window function
 # Imports the database functions from your database.py file
 from database import validate_user, add_user
 from dashboardWindow import DashboardWindow
@@ -46,6 +47,7 @@ def on_login_attempt(login_window):
     else:
         VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")
         print(f"Login failed: Invalid credentials for {username}.")
+
 
 def create_main_window():
     """
@@ -95,5 +97,20 @@ def create_main_window():
         bd=3 # Sets the border thickness
     )
     login_button.pack(pady=10)
+
+    # --- Create Account Button ---
+    create_account_button = tk.Button(
+        window,
+        text="Create Account",
+        command=lambda: create_account_window(), # Opens the account creation window
+        bg="#2196F3", # Sets background color (blue)
+        fg="white", # Sets foreground color (text color)
+        font=("Arial", 12, "bold"),
+        width=15,
+        height=1,
+        relief="raised", # Gives the button a raised 3D effect
+        bd=3 # Sets the border thickness
+    )
+    create_account_button.pack(pady=10)
 
     return window # Returns the main window object
