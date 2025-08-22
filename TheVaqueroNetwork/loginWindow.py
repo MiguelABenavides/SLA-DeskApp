@@ -3,32 +3,12 @@ from tkinter import messagebox as VaquerosMessager
 
 # Imports the database functions from your database.py file
 from database import validate_user, add_user
-# Import the richer dashboard window implementation
-from dashboardWindow import create_dashboard_window as open_dashboard_window
+from dashboardWindow import DashboardWindow
 
 # Global variables for entry widgets. These need to be accessible across functions
 # like on_login_attempt, so they are declared global here and assigned in create_main_window.
 username_entry = None
 password_entry = None
-
-def create_dashboard_window():
-    """
-    Creates and displays the main dashboard window of the application.
-    This window will appear after a successful login.
-    """
-    # tk.Toplevel creates a new, independent top-level window (not the root Tk() window).
-    dashboard_window = tk.Toplevel()
-    dashboard_window.title("The Vaquero Network - Dashboard") # Sets the title for the dashboard window
-    dashboard_window.geometry("800x600") # Sets a larger size for the dashboard
-
-    # Dashboard welcome message label
-    dashboard_label = tk.Label(
-        dashboard_window,
-        text="Welcome to your Vaquero Network Dashboard!",
-        font=("Arial", 20, "bold"),
-        fg="#0056b3" # Sets a blue foreground color
-    )
-    dashboard_label.pack(pady=50) # Packs the label with vertical padding
 
 def on_login_attempt(login_window):
     """
@@ -55,23 +35,17 @@ def on_login_attempt(login_window):
     if validate_user(username, password):
         VaquerosMessager.showinfo("Login Successful", "Welcome to The Vaquero Network!")
         print(f"Login successful for user: {username}")
-        login_window.destroy() # Closes the current login window upon successful login
-        open_dashboard_window() # Opens the main dashboard window (rich dashboard)
+        # Hide the root instead of destroying it, so we can open a Toplevel dashboard
+        login_window.withdraw()
+        dash = DashboardWindow(master=login_window)
+        dash.focus_set()
+        def on_dash_close():
+            dash.destroy()
+            login_window.deiconify()
+        dash.protocol("WM_DELETE_WINDOW", on_dash_close)
     else:
-        # If the user is not found in the database, offers to create a new account
-        if VaquerosMessager.askyesno("User Not Found", "User not found. Would you like to create an account?"):
-            # Attempts to add the new user to the database
-            if add_user(username, password):
-                VaquerosMessager.showinfo("Account Created", "Account created successfully! You can now log in.")
-                # Optionally clears the input fields after successful registration for a fresh login attempt
-                username_entry.delete(0, tk.END)
-                password_entry.delete(0, tk.END)
-            else:
-                # This case usually means the username already exists due to the UNIQUE constraint
-                VaquerosMessager.showerror("Error", "Could not create account. Username might already exist.")
-        else:
-            VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")
-            print(f"Login failed: Invalid credentials for {username}.")
+        VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")
+        print(f"Login failed: Invalid credentials for {username}.")
 
 def create_main_window():
     """
