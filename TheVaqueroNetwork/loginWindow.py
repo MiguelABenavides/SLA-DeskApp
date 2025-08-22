@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox as VaquerosMessager
 
+from createAccount import create_account_window # Imports the account creation window function
 # Imports the database functions from your database.py file
-from database import validate_user, add_user
+from database import validate_user#, add_user
 # Import the richer dashboard window implementation
 from dashboardWindow import create_dashboard_window as open_dashboard_window
 
@@ -59,8 +60,10 @@ def on_login_attempt(login_window):
         open_dashboard_window() # Opens the main dashboard window (rich dashboard)
     else:
         # If the user is not found in the database, offers to create a new account
-        if VaquerosMessager.askyesno("User Not Found", "User not found. Would you like to create an account?"):
+        VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")
+        print(f"Login failed: Invalid credentials for {username}.")
             # Attempts to add the new user to the database
+        """"if not validate_user(username, password):
             if add_user(username, password):
                 VaquerosMessager.showinfo("Account Created", "Account created successfully! You can now log in.")
                 # Optionally clears the input fields after successful registration for a fresh login attempt
@@ -71,7 +74,7 @@ def on_login_attempt(login_window):
                 VaquerosMessager.showerror("Error", "Could not create account. Username might already exist.")
         else:
             VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")
-            print(f"Login failed: Invalid credentials for {username}.")
+            print(f"Login failed: Invalid credentials for {username}.")"""
 
 def create_main_window():
     """
@@ -121,5 +124,20 @@ def create_main_window():
         bd=3 # Sets the border thickness
     )
     login_button.pack(pady=10)
+
+    # --- Create Account Button ---
+    create_account_button = tk.Button(
+        window,
+        text="Create Account",
+        command=lambda: create_account_window(), # Opens the account creation window
+        bg="#2196F3", # Sets background color (blue)
+        fg="white", # Sets foreground color (text color)
+        font=("Arial", 12, "bold"),
+        width=15,
+        height=1,
+        relief="raised", # Gives the button a raised 3D effect
+        bd=3 # Sets the border thickness
+    )
+    create_account_button.pack(pady=10)
 
     return window # Returns the main window object
