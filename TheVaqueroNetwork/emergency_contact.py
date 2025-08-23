@@ -16,7 +16,7 @@ class EmergencyContactsPanel(ttk.Frame):
         self.pack(fill="both", expand=True)
 
         # Panel title and description
-        tk.Label(self, text="Emergency Contacts & Quick Access", font=("Inter", 16, "bold"), fg="#333333", bg="white").pack(pady=20)
+        tk.Label(self, text="Emergency Contacts & Quick Access", font=("Inter", 16, "bold"), fg="#0056b3", bg="white").pack(pady=20) # UTRGV Blue for heading
         tk.Label(self, text="Quick access to security, counseling, and health services.", font=("Inter", 12), bg="white", fg="#555555").pack(pady=10)
 
         # Frame for emergency contact input fields
@@ -38,7 +38,7 @@ class EmergencyContactsPanel(ttk.Frame):
             contact_input_frame,
             text="Add Contact",
             command=self._add_emergency_contact,
-            style='Emergency.TButton'
+            style='Emergency.TButton' # Red button style
         ).pack(pady=10)
 
         # Frame to display the list of saved contacts

@@ -20,9 +20,8 @@ class BulletinBoardPanel(ttk.Frame):
         self.pack(fill="both", expand=True)  # Make the panel fill its parent frame
 
         # --- Panel Title and Description ---
-        tk.Label(self, text="Bulletin Board", font=("Inter", 16, "bold"), fg="#333333", bg="white").pack(pady=20)
-        tk.Label(self, text="Browse and post announcements.", font=("Inter", 12), bg="white", fg="#555555").pack(
-            pady=10)
+        tk.Label(self, text="Bulletin Board", font=("Inter", 16, "bold"), fg="#0056b3", bg="white").pack(pady=20) # UTRGV Blue for heading
+        tk.Label(self, text="Browse and post announcements.", font=("Inter", 12), bg="white", fg="#555555").pack(pady=10)
 
         # --- Announcement Posting Section ---
         post_frame = ttk.Frame(self, padding="10 10 10 10")
@@ -33,20 +32,18 @@ class BulletinBoardPanel(ttk.Frame):
         self.announcement_title_entry.pack(pady=(0, 10), fill="x")
 
         ttk.Label(post_frame, text="Announcement Content:").pack(pady=(5, 0), anchor="w")
-        self.announcement_content_text = tk.Text(post_frame, height=5, width=60, font=("Inter", 12), relief="flat",
-                                                 borderwidth=1, bg="#f0f0f0", fg="#333333")
+        self.announcement_content_text = tk.Text(post_frame, height=5, width=60, font=("Inter", 12), relief="flat", borderwidth=1, bg="#f0f0f0", fg="#333333")
         self.announcement_content_text.pack(pady=(0, 10), fill="x", expand=True)
 
         ttk.Button(
             post_frame,
             text="Post Announcement",
             command=self._post_announcement,  # Calls the method to post an announcement
-            style='Post.TButton'  # Use consistent button style
+            style='Post.TButton'
         ).pack(pady=10)
 
         # --- Display Announcements Section ---
-        tk.Label(self, text="Recent Announcements:", font=("Inter", 14, "bold"), fg="#333333", bg="white").pack(
-            pady=(20, 10), anchor="w", padx=20)
+        tk.Label(self, text="Recent Announcements:", font=("Inter", 14, "bold"), fg="#333333", bg="white").pack(pady=(20, 10), anchor="w", padx=20)
 
         # Text widget to display announcements, with scrollbar
         self.announcements_text_widget = tk.Text(

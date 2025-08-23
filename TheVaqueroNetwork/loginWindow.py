@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk  # NEW: Import ttk for themed widgets
 from tkinter import messagebox as VaquerosMessager
 
 from createAccount import create_account_window
@@ -71,62 +72,78 @@ def create_main_window():
 
     window = tk.Tk()  # Creates the root Tkinter window instance
     window.title("The Vaquero Network - Login")  # Sets the title of the login window
-    window.geometry("400x350")  # Sets the initial size of the window
+    window.geometry("400x380")  # Slightly increased height for better spacing
+    window.resizable(False, False)  # Prevent resizing for a fixed, clean look
 
-    # Welcome message label for the login screen
-    welcome_label = tk.Label(
+    # NEW: Configure ttk styles
+    style = ttk.Style()
+    style.theme_use('clam')
+
+    # Configure global fonts and colors for ttk widgets
+    style.configure('.', font=('Inter', 10))
+    style.configure('TLabel', font=('Inter', 12), foreground='#333333', background='white')
+    style.configure('TEntry', font=('Inter', 12), fieldbackground='#f0f0f0', foreground='#333333', borderwidth=1, relief='flat')
+
+    # Configure default TButton style (for Login button - UTRGV Orange)
+    style.configure('TButton',
+                    font=('Inter', 12, 'bold'),
+                    foreground='white',
+                    background='#F26722',  # UTRGV Orange
+                    padding=10,
+                    relief='flat',
+                    borderwidth=0
+                    )
+    style.map('TButton',
+              background=[('active', '#d95d1e')],  # Darken on hover
+              foreground=[('active', 'white')]
+              )
+
+    # Specific style for the Create Account button (UTRGV Blue)
+    style.configure('Blue.TButton', background='#0056b3')  # UTRGV Blue
+    style.map('Blue.TButton',
+              background=[('active', '#003d80')],  # Darken on hover
+              foreground=[('active', 'white')]
+              )
+
+
+    # Welcome message label (still using tk.Label as it's not a themed widget type that needs ttk.Style)
+    tk.Label(
         window,
         text="Welcome to The Vaquero Network!",
-        font=("Arial", 16, "bold"),  # Sets font and makes it bold
-        fg="#333333"  # Sets text color to dark gray
-    )
-    welcome_label.pack(pady=30)
+        font=("Inter", 18, "bold"),
+        fg="#0056b3",  # UTRGV Blue for heading
+        bg="white"
+    ).pack(pady=(30, 20))
 
     # --- Username Input Field ---
-    username_label = tk.Label(window, text="Username:", font=("Arial", 10))
-    username_label.pack(pady=(10, 0))
-
+    ttk.Label(window, text="Username:").pack(pady=(5, 0))
     global username_entry
-    username_entry = tk.Entry(window, width=40, bd=2, relief="groove")  # Creates the input field for username
+    username_entry = ttk.Entry(window, width=40)
     username_entry.pack(pady=(0, 10))
 
     # --- Password Input Field ---
-    password_label = tk.Label(window, text="Password:", font=("Arial", 10))
-    password_label.pack(pady=(10, 0))
-
+    ttk.Label(window, text="Password:").pack(pady=(5, 0))
     global password_entry
-    password_entry = tk.Entry(window, width=40, show="*", bd=2, relief="groove")  # Creates password input, hides characters
+    password_entry = ttk.Entry(window, width=40, show="*")
     password_entry.pack(pady=(0, 20))
 
     # --- Login Button ---
-    login_button = tk.Button(
+    ttk.Button(
         window,
         text="Login",
-        # Uses a lambda function to pass the 'window' object to on_login_attempt when clicked
         command=lambda: on_login_attempt(window),
-        bg="#4CAF50",  # Sets background color (green)
-        fg="white",  # Sets foreground color (text color)
-        font=("Arial", 12, "bold"),
-        width=15,
-        height=1,
-        relief="raised",  # Gives the button a raised 3D effect
-        bd=3  # Sets the border thickness
-    )
-    login_button.pack(pady=10)  # Packs the login button
+        style='TButton'
+    ).pack(pady=5)
 
     # --- Create Account Button ---
-    create_account_button = tk.Button(
+    ttk.Button(
         window,
         text="Create Account",
-        command=lambda: create_account_window(),  # Opens the account creation window when clicked
-        bg="#2196F3",  # Sets background color (blue)
-        fg="white",  # Sets foreground color (text color)
-        font=("Arial", 12, "bold"),
-        width=15,
-        height=1,
-        relief="raised",  # Gives the button a raised 3D effect
-        bd=3  # Sets the border thickness
-    )
-    create_account_button.pack(pady=10)  # Packs the create account button
+        command=lambda: create_account_window(),
+        style='Blue.TButton'
+    ).pack(pady=5)
 
-    return window  # Returns the main window object for further management in SLAMain.py
+    # Set window background explicitly for consistency
+    window.configure(bg='white')
+
+    return window

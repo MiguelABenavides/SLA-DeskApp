@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+# Import panel classes for modular dashboard sections
 from activity import ActivitiesPanel
 from calendar_panel import CalendarPanel
 from bulletin_board import BulletinBoardPanel
@@ -31,35 +32,35 @@ class DashboardWindow(tk.Toplevel):
         style.configure('TEntry', font=('Inter', 12), fieldbackground='#f0f0f0', foreground='#333333', borderwidth=1,
                         relief='flat')
 
-        # Configure sidebar button styles
+        # Configure sidebar button styles (UTRGV Blue)
         style.configure('Sidebar.TButton',
                         font=('Inter', 12, 'bold'),
                         foreground='white',
-                        background='#4a6784',
+                        background='#0056b3',
                         padding=10,
                         relief='flat',
                         borderwidth=0
                         )
         style.map('Sidebar.TButton',
-                  background=[('active', '#3a526b')],
+                  background=[('active', '#003d80')],
                   foreground=[('active', 'white')]
                   )
 
-        # Configure content area button styles (e.g., for Add/View Task buttons)
+        # Configure content area button styles (UTRGV Orange for primary actions)
         style.configure('Content.TButton',
                         font=('Inter', 12, 'bold'),
                         foreground='white',
-                        background='#5cb85c',
+                        background='#F26722',
                         padding=10,
                         relief='flat',
                         borderwidth=0
                         )
         style.map('Content.TButton',
-                  background=[('active', '#4cae4c')],
+                  background=[('active', '#d95d1e')],
                   foreground=[('active', 'white')]
                   )
 
-        # Configure style for the Emergency Contact Add button
+        # Configure style for the Emergency Contact Add button (keeping red for emergency)
         style.configure('Emergency.TButton',
                         font=('Inter', 12, 'bold'),
                         foreground='white',
@@ -69,21 +70,21 @@ class DashboardWindow(tk.Toplevel):
                         borderwidth=0
                         )
         style.map('Emergency.TButton',
-                  background=[('active', '#c0392b')],
+                  background=[('active', '#c0392b')],  # Darken on hover
                   foreground=[('active', 'white')]
                   )
 
-        # Configure style for Bulletin Board Post button
+        # Configure style for Bulletin Board Post button (UTRGV Blue)
         style.configure('Post.TButton',
                         font=('Inter', 12, 'bold'),
                         foreground='white',
-                        background='#007bff',
+                        background='#0056b3',  # UTRGV Blue
                         padding=10,
                         relief='flat',
                         borderwidth=0
                         )
         style.map('Post.TButton',
-                  background=[('active', '#0056b3')],
+                  background=[('active', '#003d80')],  # Darker UTRGV Blue on hover
                   foreground=[('active', 'white')]
                   )
 
@@ -103,7 +104,7 @@ class DashboardWindow(tk.Toplevel):
         self.configure(bg='white')
 
     def _build_sidebar(self):
-        self.sidebar_frame = tk.Frame(self, bg="#1a344a", width=200, relief="raised", bd=2)
+        self.sidebar_frame = tk.Frame(self, bg="#003366", width=200, relief="raised", bd=2)
         self.sidebar_frame.grid(row=0, column=0, sticky="nswe")
         self.sidebar_frame.pack_propagate(False)
 
@@ -111,20 +112,15 @@ class DashboardWindow(tk.Toplevel):
             self.sidebar_frame,
             text="Navigation",
             font=("Inter", 16, "bold"),
-            bg="#1a344a",
+            bg="#003366",
             fg="white"
         ).pack(pady=20)
 
-        ttk.Button(self.sidebar_frame, text="Home", command=self.show_welcome_text, style='Sidebar.TButton').pack(
-            pady=10)
-        ttk.Button(self.sidebar_frame, text="Activities", command=self.show_activities_manager,
-                   style='Sidebar.TButton').pack(pady=10)
-        ttk.Button(self.sidebar_frame, text="Calendar", command=self.show_event_calendar, style='Sidebar.TButton').pack(
-            pady=10)
-        ttk.Button(self.sidebar_frame, text="Bulletin Board", command=self.show_bulletin_board,
-                   style='Sidebar.TButton').pack(pady=10)
-        ttk.Button(self.sidebar_frame, text="Emergency Contacts", command=self.show_emergency_contacts,
-                   style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Home", command=self.show_welcome_text, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Activities", command=self.show_activities_manager, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Calendar", command=self.show_event_calendar, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Bulletin Board", command=self.show_bulletin_board, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Emergency Contacts", command=self.show_emergency_contacts, style='Sidebar.TButton').pack(pady=10)
 
     def _build_content(self):
         self.content_frame = tk.Frame(self, bg="#ffffff", relief="sunken", bd=2)
@@ -138,7 +134,7 @@ class DashboardWindow(tk.Toplevel):
     def show_welcome_text(self, text: str | None = None):
         self._clear_content()
         message = text if text is not None else WELCOME_TEXT
-        tk.Label(self.content_frame, text="Dashboard Home", font=("Inter", 18, "bold"), fg="#333333", bg="white").pack(
+        tk.Label(self.content_frame, text="Dashboard Home", font=("Inter", 18, "bold"), fg="#0056b3", bg="white").pack(
             pady=(20, 10))
         tk.Message(self.content_frame, text=message, font=("Inter", 12), width=700, justify="left", bg="white",
                    fg="#555555").pack(padx=20, pady=(0, 20))
