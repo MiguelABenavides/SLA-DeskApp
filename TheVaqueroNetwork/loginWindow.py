@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox as VaquerosMessager
 
-from createAccount import create_account_window  # Imports the function to open the account creation window
-from database import validate_user, add_user  # Imports database functions for user validation and addition
-from dashboardWindow import DashboardWindow  # Imports the class for the main dashboard window
+from createAccount import create_account_window
+from database import validate_user, add_user
+from dashboardWindow import DashboardWindow
 
 # Global variables for entry widgets. These are used to access the input fields
-# from different functions within the module.
 username_entry = None
 password_entry = None
 
@@ -21,7 +20,7 @@ def on_login_attempt(login_window):
         login_window: The Tkinter window object of the login screen,
                       which will be managed upon successful login.
     """
-    global username_entry, password_entry  # Declare intent to use global entry widgets
+    global username_entry, password_entry
 
     username = username_entry.get()  # Retrieve text from the username input field
     password = password_entry.get()  # Retrieve text from the password input field
@@ -34,12 +33,11 @@ def on_login_attempt(login_window):
 
     # Call the validate_user function from database.py to check credentials
     if validate_user(username, password):
-        VaquerosMessager.showinfo("Login Successful", "Welcome to The Vaquero Network!")  # Show success message
+        VaquerosMessager.showinfo("Login Successful", "Welcome to The Vaquero Network!")
         print(f"Login successful for user: {username}")
         login_window.withdraw()  # Hide the current login window
 
         # Create an instance of the DashboardWindow class, passing the login window as master
-        # and the logged-in username for personalization.
         dash = DashboardWindow(master=login_window, username=username)
         dash.focus_set()  # Set focus to the newly opened dashboard window
 
@@ -61,8 +59,7 @@ def on_login_attempt(login_window):
             else:
                 VaquerosMessager.showerror("Error", "Could not create account. Username might already exist.")
         else:
-            VaquerosMessager.showerror("Login Failed",
-                                       "Invalid Username or Password.")  # Show error for invalid credentials
+            VaquerosMessager.showerror("Login Failed", "Invalid Username or Password.")  # Show error for invalid credentials
             print(f"Login failed: Invalid credentials for {username}.")
 
 
@@ -71,6 +68,7 @@ def create_main_window():
     Creates and displays the initial Tkinter window for the login screen.
     This is the first window users will see.
     """
+
     window = tk.Tk()  # Creates the root Tkinter window instance
     window.title("The Vaquero Network - Login")  # Sets the title of the login window
     window.geometry("400x350")  # Sets the initial size of the window
@@ -82,24 +80,23 @@ def create_main_window():
         font=("Arial", 16, "bold"),  # Sets font and makes it bold
         fg="#333333"  # Sets text color to dark gray
     )
-    welcome_label.pack(pady=30)  # Packs the label with vertical padding
+    welcome_label.pack(pady=30)
 
     # --- Username Input Field ---
     username_label = tk.Label(window, text="Username:", font=("Arial", 10))
-    username_label.pack(pady=(10, 0))  # Packs label with top padding
+    username_label.pack(pady=(10, 0))
 
-    global username_entry  # Declares username_entry as a global variable
+    global username_entry
     username_entry = tk.Entry(window, width=40, bd=2, relief="groove")  # Creates the input field for username
-    username_entry.pack(pady=(0, 10))  # Packs entry with bottom padding
+    username_entry.pack(pady=(0, 10))
 
     # --- Password Input Field ---
     password_label = tk.Label(window, text="Password:", font=("Arial", 10))
-    password_label.pack(pady=(10, 0))  # Packs label with top padding
+    password_label.pack(pady=(10, 0))
 
-    global password_entry  # Declares password_entry as a global variable
-    password_entry = tk.Entry(window, width=40, show="*", bd=2,
-                              relief="groove")  # Creates password input, hides characters
-    password_entry.pack(pady=(0, 20))  # Packs entry with bottom padding
+    global password_entry
+    password_entry = tk.Entry(window, width=40, show="*", bd=2, relief="groove")  # Creates password input, hides characters
+    password_entry.pack(pady=(0, 20))
 
     # --- Login Button ---
     login_button = tk.Button(
