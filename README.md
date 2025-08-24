@@ -1,4 +1,4 @@
-Developed By: Miguel Benavides, Gera Quintana, Mohammad Almutairi 
+Developed By: Miguel Benavides, Gerardo Quintana, Mohammad Almutairi 
 
 The Vaquero Network: Desktop Application
 Project Overview
