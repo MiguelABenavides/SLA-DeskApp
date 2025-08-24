@@ -1,113 +1,156 @@
 import tkinter as tk
+from tkinter import ttk
 
-# Default text to show when the dashboard opens
+# Import panel classes for modular dashboard sections
+from activity import ActivitiesPanel
+from calendar_panel import CalendarPanel
+from bulletin_board import BulletinBoardPanel
+from emergency_contact import EmergencyContactsPanel
+
+# Welcome message displayed on the dashboard home screen
 WELCOME_TEXT = (
     "Welcome to The Vaquero Network!\n\n"
     "This is your dashboard home.\n\n"
     "Use the navigation on the left to explore Activities, Calendar, Bulletin Board, and Emergency Contacts."
 )
 
-current_dashboard_content = None
 
-def clear_dashboard_content(parent_frame):
-    """
-    Clears all widgets from the current content frame in the dashboard.
-    """
-    for widget in parent_frame.winfo_children():
-        widget.destroy()
+class DashboardWindow(tk.Toplevel):
+    def __init__(self, master=None, username: str = "Guest"):
+        super().__init__(master=master)
+        self.title("The Vaquero Network - Dashboard")
+        self.geometry("1000x700")
+        self.username = username
 
-def show_welcome_text(parent_frame, text: str | None = None):
-    """
-    Displays a welcome/custom text area in the dashboard content area.
-    """
-    clear_dashboard_content(parent_frame)
-    message = text if text is not None else WELCOME_TEXT
-    tk.Label(parent_frame, text="Dashboard", font=("Arial", 16, "bold"), fg="#333333").pack(pady=(20, 10))
-    tk.Message(parent_frame, text=message, font=("Arial", 12), width=700, justify="left").pack(padx=20, pady=(0, 20))
+        # Configure ttk styles for the dashboard
+        style = ttk.Style(self)
+        style.theme_use('clam')
 
+        # Configure global fonts and colors for ttk widgets within this dashboard
+        style.configure('.', font=('Inter', 10))
+        style.configure('TLabel', font=('Inter', 12), foreground='#333333', background='white')
+        style.configure('TEntry', font=('Inter', 12), fieldbackground='#f0f0f0', foreground='#333333', borderwidth=1,
+                        relief='flat')
 
-def show_activities_manager(parent_frame):
-    """
-    Displays the Activities/Task Schedule Manager UI in the dashboard content area.
-    """
-    clear_dashboard_content(parent_frame) # Clear previous content
+        # Configure sidebar button styles (UTRGV Blue)
+        style.configure('Sidebar.TButton',
+                        font=('Inter', 12, 'bold'),
+                        foreground='white',
+                        background='#0056b3',
+                        padding=10,
+                        relief='flat',
+                        borderwidth=0
+                        )
+        style.map('Sidebar.TButton',
+                  background=[('active', '#003d80')],
+                  foreground=[('active', 'white')]
+                  )
 
-    # Add specific UI elements for the Activities Manager here
-    tk.Label(parent_frame, text="Activities/Task Schedule Manager", font=("Arial", 16, "bold"), fg="#333333").pack(pady=20)
-    tk.Label(parent_frame, text="Here you can add, view, edit, and delete your tasks.", font=("Arial", 12)).pack(pady=10)
+        # Configure content area button styles (UTRGV Orange for primary actions)
+        style.configure('Content.TButton',
+                        font=('Inter', 12, 'bold'),
+                        foreground='white',
+                        background='#F26722',
+                        padding=10,
+                        relief='flat',
+                        borderwidth=0
+                        )
+        style.map('Content.TButton',
+                  background=[('active', '#d95d1e')],
+                  foreground=[('active', 'white')]
+                  )
 
-    # Placeholder buttons for CRUD operations (we'll implement these next)
-    add_task_button = tk.Button(parent_frame, text="Add New Task", font=("Arial", 12, "bold"), bg="#5cb85c", fg="white", width=15)
-    add_task_button.pack(pady=5)
-    view_tasks_button = tk.Button(parent_frame, text="View All Tasks", font=("Arial", 12, "bold"), bg="#0275d8", fg="white", width=15)
-    view_tasks_button.pack(pady=5)
+        # Configure style for the Emergency Contact Add button (keeping red for emergency)
+        style.configure('Emergency.TButton',
+                        font=('Inter', 12, 'bold'),
+                        foreground='white',
+                        background='#e74c3c',
+                        padding=10,
+                        relief='flat',
+                        borderwidth=0
+                        )
+        style.map('Emergency.TButton',
+                  background=[('active', '#c0392b')],  # Darken on hover
+                  foreground=[('active', 'white')]
+                  )
 
-def show_event_calendar(parent_frame):
-    """
-    Displays the Event Calendar UI in the dashboard content area.
-    """
-    clear_dashboard_content(parent_frame)
-    tk.Label(parent_frame, text="Event Calendar", font=("Arial", 16, "bold"), fg="#333333").pack(pady=20)
-    tk.Label(parent_frame, text="View and manage upcoming events.", font=("Arial", 12)).pack(pady=10)
+        # Configure style for Bulletin Board Post button (UTRGV Blue)
+        style.configure('Post.TButton',
+                        font=('Inter', 12, 'bold'),
+                        foreground='white',
+                        background='#0056b3',  # UTRGV Blue
+                        padding=10,
+                        relief='flat',
+                        borderwidth=0
+                        )
+        style.map('Post.TButton',
+                  background=[('active', '#003d80')],  # Darker UTRGV Blue on hover
+                  foreground=[('active', 'white')]
+                  )
 
-def show_bulletin_board(parent_frame):
-    """
-    Displays the Bulletin Board UI in the dashboard content area.
-    """
-    clear_dashboard_content(parent_frame)
-    tk.Label(parent_frame, text="Bulletin Board", font=("Arial", 16, "bold"), fg="#333333").pack(pady=20)
-    tk.Label(parent_frame, text="Browse and post announcements.", font=("Arial", 12)).pack(pady=10)
+        # Configure grid layout for the main window (sidebar and content area)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
 
-def show_emergency_contacts(parent_frame):
-    """
-    Displays the Emergency Contacts UI in the dashboard content area.
-    """
-    clear_dashboard_content(parent_frame)
-    tk.Label(parent_frame, text="Emergency Contacts & Quick Access", font=("Arial", 16, "bold"), fg="#333333").pack(pady=20)
-    tk.Label(parent_frame, text="Quick access to security, counseling, and health services.", font=("Arial", 12)).pack(pady=10)
+        # Build UI sections for the dashboard
+        self._build_sidebar()
+        self._build_content()
 
-def create_dashboard_window():
-    """
-    Creates and displays the main dashboard window of the application.
-    This window will appear after a successful login.
-    """
-    dashboard_window = tk.Toplevel() # Toplevel creates a new, independent top-level window
-    dashboard_window.title("The Vaquero Network - Dashboard")
-    dashboard_window.geometry("1000x700") # Increased size for dashboard
+        # Display the welcome text when the dashboard first opens
+        self.show_welcome_text()
 
-    # Configure grid for main layout (sidebar and content area)
-    dashboard_window.grid_rowconfigure(0, weight=1)
-    dashboard_window.grid_columnconfigure(0, weight=0)
-    dashboard_window.grid_columnconfigure(1, weight=1)
+        # Set window background explicitly for consistency
+        self.configure(bg='white')
 
-    #Sidebar Frame
-    sidebar_frame = tk.Frame(dashboard_window, bg="#e0e0e0", width=200, relief="raised", bd=2)
-    sidebar_frame.grid(row=0, column=0, sticky="nswe")
-    sidebar_frame.pack_propagate(False) # Prevent frame from shrinking to content
+    def _build_sidebar(self):
+        self.sidebar_frame = tk.Frame(self, bg="#003366", width=200, relief="raised", bd=2)
+        self.sidebar_frame.grid(row=0, column=0, sticky="nswe")
+        self.sidebar_frame.pack_propagate(False)
 
-    tk.Label(sidebar_frame, text="Navigation", font=("Arial", 14, "bold"), bg="#e0e0e0", fg="#333333").pack(pady=20)
+        tk.Label(
+            self.sidebar_frame,
+            text="Navigation",
+            font=("Inter", 16, "bold"),
+            bg="#003366",
+            fg="white"
+        ).pack(pady=20)
 
-    # Main Content Frame (declared before sidebar buttons so it exists when they call it)
-    dashboard_content_frame = tk.Frame(dashboard_window, bg="#ffffff", relief="sunken", bd=2)
-    dashboard_content_frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        ttk.Button(self.sidebar_frame, text="Home", command=self.show_welcome_text, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Activities", command=self.show_activities_manager, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Calendar", command=self.show_event_calendar, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Bulletin Board", command=self.show_bulletin_board, style='Sidebar.TButton').pack(pady=10)
+        ttk.Button(self.sidebar_frame, text="Emergency Contacts", command=self.show_emergency_contacts, style='Sidebar.TButton').pack(pady=10)
 
+    def _build_content(self):
+        self.content_frame = tk.Frame(self, bg="#ffffff", relief="sunken", bd=2)
+        self.content_frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        self.content_frame.configure(bg='white')
 
-    # Dashboard navigation buttons
-    # Note: We pass dashboard_content_frame to these functions
-    home_button = tk.Button(sidebar_frame, text="Home", command=lambda: show_welcome_text(dashboard_content_frame), width=20, pady=5)
-    home_button.pack(pady=5)
+    def _clear_content(self):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
 
-    activities_button = tk.Button(sidebar_frame, text="Activities", command=lambda: show_activities_manager(dashboard_content_frame), width=20, pady=5)
-    activities_button.pack(pady=5)
+    def show_welcome_text(self, text: str | None = None):
+        self._clear_content()
+        message = text if text is not None else WELCOME_TEXT
+        tk.Label(self.content_frame, text="Dashboard Home", font=("Inter", 18, "bold"), fg="#0056b3", bg="white").pack(
+            pady=(20, 10))
+        tk.Message(self.content_frame, text=message, font=("Inter", 12), width=700, justify="left", bg="white",
+                   fg="#555555").pack(padx=20, pady=(0, 20))
 
-    calendar_button = tk.Button(sidebar_frame, text="Calendar", command=lambda: show_event_calendar(dashboard_content_frame), width=20, pady=5)
-    calendar_button.pack(pady=5)
+    def show_activities_manager(self):
+        self._clear_content()
+        ActivitiesPanel(self.content_frame, self.username)
 
-    bulletin_button = tk.Button(sidebar_frame, text="Bulletin Board", command=lambda: show_bulletin_board(dashboard_content_frame), width=20, pady=5)
-    bulletin_button.pack(pady=5)
+    def show_event_calendar(self):
+        self._clear_content()
+        CalendarPanel(self.content_frame, self.username)
 
-    emergency_button = tk.Button(sidebar_frame, text="Emergency Contacts", command=lambda: show_emergency_contacts(dashboard_content_frame), width=20, pady=5)
-    emergency_button.pack(pady=5)
+    def show_bulletin_board(self):
+        self._clear_content()
+        BulletinBoardPanel(self.content_frame, self.username)
 
-    # Display welcome text when dashboard opens
-    show_welcome_text(dashboard_content_frame)
+    def show_emergency_contacts(self):
+        self._clear_content()
+        EmergencyContactsPanel(self.content_frame, self.username)

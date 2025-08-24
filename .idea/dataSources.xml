@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="vaquero_network" uuid="96a9672c-07d0-4e55-825e-c62f37a68824">
+    <data-source source="LOCAL" name="vaquero_network" uuid="8ed65819-c9ef-4181-a15b-8726dc846af8">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\ninga\PycharmProjects\SLA-DeskApp\vaquero_network.db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="vaquero_network [2]" uuid="51347d76-6017-45de-b579-fe7e178da030">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\ninga\PycharmProjects\SLA-DeskApp\TheVaqueroNetwork\vaquero_network.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/TheVaqueroNetwork/vaquero_network.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
